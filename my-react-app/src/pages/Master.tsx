@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TodoList from '../components/TodoList'
 import MoreInformation from '../components/MoreInformation'
+import ServantsList from '../components/ServantsList'
 import './Master.css'
 
 const SECTIONS = [
   { id: 'todos', label: "To do's" },
+  { id: 'servants', label: 'Throne of Heroes' },
   { id: 'more-info', label: 'More information' },
 ] as const
 
@@ -40,6 +42,7 @@ export default function Master() {
         </nav>
         <div className="master-content">
           {section === 'todos' && <TodoList />}
+          {section === 'servants' && <ServantsList />}
           {section === 'more-info' && <MoreInformation />}
         </div>
       </div>
