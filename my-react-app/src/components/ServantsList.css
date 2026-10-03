@@ -1,0 +1,69 @@
+.servants {
+  display: flex;
+  gap: 24px;
+  height: 420px;
+}
+
+.servants-list-col {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.servants-list-col input {
+  padding: 8px;
+  font: inherit;
+}
+
+.servants-names {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.servants-names button {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.servants-names button:hover {
+  background: var(--code-bg);
+}
+
+.servants-names button.active {
+  background: var(--accent-bg);
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.servants-empty {
+  padding: 8px 12px;
+}
+
+.servants-detail-col {
+  flex: 1;
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+}
+
+.servants-detail-col dt {
+  font-weight: 600;
+  color: var(--text-h);
+  margin-top: 12px;
+}
+
+.servants-detail-col dd {
+  margin: 0;
+}
