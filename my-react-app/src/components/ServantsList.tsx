@@ -8,6 +8,8 @@ type Servant = {
   Hidden_Attribute: string | null
   Power_Ranking: string | null
   Difficulty_Ranking: string | null
+  Image_Url: string | null
+  Document_Url: string | null
 }
 
 export default function ServantsList() {
@@ -21,7 +23,7 @@ export default function ServantsList() {
     async function load() {
       const { data, error } = await supabase
         .from('Servants')
-        .select('id, Name, Hidden_Attribute, Power_Ranking, Difficulty_Ranking')
+        .select('id, Name, Hidden_Attribute, Power_Ranking, Difficulty_Ranking, Image_Url, Document_Url')
         .order('Name')
       if (error) setError(error.message)
       else setServants(data ?? [])
@@ -66,15 +68,33 @@ export default function ServantsList() {
       <div className="servants-detail-col">
         {selected && (
           <>
-            <h2>{selected.Name}</h2>
-            <dl>
-              <dt>Hidden attribute</dt>
-              <dd>{selected.Hidden_Attribute ?? '—'}</dd>
-              <dt>Power ranking</dt>
-              <dd>{selected.Power_Ranking ?? '—'}</dd>
-              <dt>Difficulty ranking</dt>
-              <dd>{selected.Difficulty_Ranking ?? '—'}</dd>
-            </dl>
+            <div className="servants-info">
+              <h2>{selected.Name}</h2>
+              <dl>
+                <dt>Hidden attribute</dt>
+                <dd>{selected.Hidden_Attribute ?? '—'}</dd>
+                <dt>Power ranking</dt>
+                <dd>{selected.Power_Ranking ?? '—'}</dd>
+                <dt>Difficulty ranking</dt>
+                <dd>{selected.Difficulty_Ranking ?? '—'}</dd>
+                <dt>
+                  {selected.Document_Url ? (
+                    <a href={selected.Document_Url} target="_blank" rel="noopener noreferrer">
+                      True name discernment
+                    </a>
+                  ) : (
+                    '—'
+                  )}
+                </dt>
+              </dl>
+            </div>
+            {selected.Image_Url && (
+              <img
+                className="servants-image"
+                src={selected.Image_Url}
+                alt={selected.Name}
+              />
+            )}
           </>
         )}
       </div>
