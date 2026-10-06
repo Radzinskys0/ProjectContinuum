@@ -1,0 +1,36 @@
+.rules {
+  height: 420px;
+  overflow-y: auto;
+  padding-right: 16px;
+}
+
+.rules section + section {
+  margin-top: 24px;
+}
+
+.rules h2 {
+  margin-bottom: 8px;
+}
+
+.rules p + p,
+.rules p + ul,
+.rules ul + p {
+  margin-top: 12px;
+}
+
+.rules ul {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.rules li {
+  white-space: pre-line;
+}
+
+.rules li + li {
+  margin-top: 8px;
+}
+
+.rules-line {
+  display: block;
+}

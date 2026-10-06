@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../utils/supabase'
 
@@ -6,13 +6,22 @@ type AuthState = {
   session: Session | null
   loading: boolean
   role: string | null
+  displayName: string | null
+  updateDisplayName: (name: string) => Promise<string | null>
 }
 
-const AuthContext = createContext<AuthState>({ session: null, loading: true, role: null })
+const AuthContext = createContext<AuthState>({
+  session: null,
+  loading: true,
+  role: null,
+  displayName: null,
+  updateDisplayName: async () => 'Not logged in.',
+})
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [displayName, setDisplayName] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -27,9 +36,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  const userId = session?.user.id
+
+  useEffect(() => {
+    if (!userId) {
+      setDisplayName(null)
+      return
+    }
+    let cancelled = false
+    supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', userId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setDisplayName(data?.display_name ?? null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
+  const updateDisplayName = useCallback(
+    async (name: string) => {
+      if (!userId) return 'Not logged in.'
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ display_name: name })
+        .eq('id', userId)
+        .select('display_name')
+      if (error) return error.code === '23505' ? 'That name is already taken.' : error.message
+      if (!data || data.length === 0) return 'Could not update your profile.'
+      setDisplayName(data[0].display_name)
+      return null
+    },
+    [userId],
+  )
+
   const role = (session?.user.app_metadata?.role as string | undefined) ?? null
 
-  return <AuthContext.Provider value={{ session, loading, role }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ session, loading, role, displayName, updateDisplayName }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
