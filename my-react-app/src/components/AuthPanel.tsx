@@ -3,7 +3,7 @@ import { supabase } from '../utils/supabase'
 import { useAuth } from '../auth/AuthContext'
 
 export default function AuthPanel() {
-  const { session } = useAuth()
+  const { session, displayName } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
@@ -36,7 +36,7 @@ export default function AuthPanel() {
   if (session) {
     return (
       <div>
-        <p>Signed in as {session.user.email}</p>
+        <p>Signed in as {displayName ?? session.user.email}</p>
         <button onClick={logOut}>Log out</button>
       </div>
     )

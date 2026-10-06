@@ -1,0 +1,74 @@
+.forum {
+  text-align: left;
+  padding: 0 24px 48px;
+}
+
+.forum > button:first-child {
+  margin-top: 16px;
+}
+
+.forum h1 {
+  text-align: center;
+}
+
+.forum-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+
+.forum-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.forum-list a {
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.forum-meta {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.forum-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 24px 0;
+}
+
+.forum-form input,
+.forum-form textarea {
+  padding: 8px;
+  font: inherit;
+  resize: vertical;
+}
+
+.forum-form button {
+  align-self: flex-start;
+}
+
+.forum-note {
+  margin: 24px 0;
+}
+
+.forum-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.forum-post {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.forum-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin-top: 8px;
+}

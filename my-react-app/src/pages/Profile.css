@@ -1,0 +1,48 @@
+.profile {
+  text-align: left;
+  padding: 0 24px 48px;
+}
+
+.profile > button:first-child {
+  margin-top: 16px;
+}
+
+.profile h1 {
+  text-align: center;
+}
+
+.profile dt {
+  font-weight: 600;
+  color: var(--text-h);
+  margin-top: 12px;
+}
+
+.profile dd {
+  margin: 0;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+  max-width: 360px;
+}
+
+.profile-form label {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.profile-form input {
+  padding: 8px;
+  font: inherit;
+}
+
+.profile-form button {
+  align-self: flex-start;
+}
+
+.profile-hint {
+  font-size: 14px;
+}
