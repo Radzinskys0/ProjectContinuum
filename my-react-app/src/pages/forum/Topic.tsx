@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../utils/supabase'
 import { useAuth } from '../../auth/AuthContext'
+import AuthorName from '../../components/AuthorName'
 import './Forum.css'
 
 type ThreadRow = {
   id: number
   title: string
+  pinned: boolean
+  author_id: string
   created_at: string
   author: { display_name: string } | null
 }
@@ -14,7 +17,7 @@ type ThreadRow = {
 export default function Topic() {
   const { topicId } = useParams()
   const navigate = useNavigate()
-  const { session } = useAuth()
+  const { session, timedOutUntil } = useAuth()
   const [topicTitle, setTopicTitle] = useState('')
   const [threads, setThreads] = useState<ThreadRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -30,8 +33,9 @@ export default function Topic() {
         supabase.from('topics').select('title').eq('id', topicId).maybeSingle(),
         supabase
           .from('threads')
-          .select('id, title, created_at, author:profiles(display_name)')
+          .select('id, title, pinned, author_id, created_at, author:profiles(display_name)')
           .eq('topic_id', topicId)
+          .order('pinned', { ascending: false })
           .order('created_at', { ascending: false }),
       ])
       if (topicRes.error || threadsRes.error) {
@@ -56,7 +60,7 @@ export default function Topic() {
       p_body: body.trim(),
     })
     if (error) {
-      setFormError(error.message)
+      setFormError(error.code === '42501' ? 'You cannot post right now. You may be timed out.' : error.message)
       setSubmitting(false)
     } else {
       navigate(`/forum/thread/${data}`)
@@ -72,7 +76,11 @@ export default function Topic() {
         <>
           <h1>{topicTitle}</h1>
 
-          {session ? (
+          {session && timedOutUntil ? (
+            <p className="forum-note forum-timeout">
+              You are timed out until {timedOutUntil.toLocaleString()} and cannot create threads.
+            </p>
+          ) : session ? (
             <div className="forum-form">
               <h2>New thread</h2>
               <input
@@ -102,11 +110,13 @@ export default function Topic() {
 
           <ul className="forum-list">
             {threads.map((t) => (
-              <li key={t.id}>
+              <li key={t.id} className={t.pinned ? 'pinned' : ''}>
+                {t.pinned && <span className="forum-pin-label">Pinned</span>}
                 <Link to={`/forum/thread/${t.id}`}>{t.title}</Link>
-                <p className="forum-meta">
-                  by {t.author?.display_name ?? 'unknown'} · {new Date(t.created_at).toLocaleString()}
-                </p>
+                <div className="forum-meta">
+                  by <AuthorName userId={t.author_id} name={t.author?.display_name ?? 'unknown'} /> ·{' '}
+                  {new Date(t.created_at).toLocaleString()}
+                </div>
               </li>
             ))}
           </ul>

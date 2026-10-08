@@ -4,12 +4,14 @@ import TodoList from '../components/TodoList'
 import MoreInformation from '../components/MoreInformation'
 import ServantsList from '../components/ServantsList'
 import Rules from '../components/Rules'
+import UsersAdmin from '../components/UsersAdmin'
 import './Master.css'
 
 const SECTIONS = [
   { id: 'todos', label: "To do's" },
   { id: 'rules', label: 'Servants Rules' },
   { id: 'servants', label: 'Throne of Heroes' },
+  { id: 'users', label: 'Masters' },
   { id: 'more-info', label: 'More information' },
 ] as const
 
@@ -46,6 +48,7 @@ export default function Master() {
           {section === 'todos' && <TodoList />}
           {section === 'rules' && <Rules />}
           {section === 'servants' && <ServantsList />}
+          {section === 'users' && <UsersAdmin />}
           {section === 'more-info' && <MoreInformation />}
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../utils/supabase'
 import { useAuth } from '../../auth/AuthContext'
+import AuthorName from '../../components/AuthorName'
 import './Forum.css'
 
 type PostRow = {
@@ -17,8 +18,8 @@ const POST_COLUMNS = 'id, author_id, body, created_at, author:profiles(display_n
 export default function Thread() {
   const { threadId } = useParams()
   const navigate = useNavigate()
-  const { session, role } = useAuth()
-  const [thread, setThread] = useState<{ title: string; topic_id: number; author_id: string } | null>(null)
+  const { session, role, timedOutUntil } = useAuth()
+  const [thread, setThread] = useState<{ title: string; topic_id: number; author_id: string; pinned: boolean } | null>(null)
   const [posts, setPosts] = useState<PostRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -32,7 +33,7 @@ export default function Thread() {
   useEffect(() => {
     async function load() {
       const [threadRes, postsRes] = await Promise.all([
-        supabase.from('threads').select('title, topic_id, author_id').eq('id', threadId).maybeSingle(),
+        supabase.from('threads').select('title, topic_id, author_id, pinned').eq('id', threadId).maybeSingle(),
         supabase.from('posts').select(POST_COLUMNS).eq('thread_id', threadId).order('created_at'),
       ])
       if (threadRes.error || postsRes.error) {
@@ -57,12 +58,23 @@ export default function Thread() {
       .select(POST_COLUMNS)
       .single()
     if (error) {
-      setFormError(error.message)
+      setFormError(error.code === '42501' ? 'You cannot post right now. You may be timed out.' : error.message)
     } else {
       setPosts((prev) => [...prev, data as unknown as PostRow])
       setReply('')
     }
     setSubmitting(false)
+  }
+
+  const togglePin = async () => {
+    if (!thread) return
+    setDeleteError('')
+    const { error } = await supabase.rpc('set_thread_pinned', {
+      p_thread_id: Number(threadId),
+      p_pinned: !thread.pinned,
+    })
+    if (error) setDeleteError(error.message)
+    else setThread({ ...thread, pinned: !thread.pinned })
   }
 
   const deleteThread = async () => {
@@ -95,21 +107,28 @@ export default function Thread() {
       {thread && (
         <>
           <h1>{thread.title}</h1>
+          {thread.pinned && <p className="forum-pin-label">Pinned</p>}
+          {role === 'gm' && <button onClick={togglePin}>{thread.pinned ? 'Unpin thread' : 'Pin thread'}</button>}
           {canDelete(thread.author_id) && <button onClick={deleteThread}>Delete thread</button>}
           {deleteError && <p>{deleteError}</p>}
           <div className="forum-posts">
             {posts.map((p, i) => (
               <article key={p.id} className="forum-post">
-                <p className="forum-meta">
-                  {p.author?.display_name ?? 'unknown'} · {new Date(p.created_at).toLocaleString()}
-                </p>
+                <div className="forum-meta">
+                  <AuthorName userId={p.author_id} name={p.author?.display_name ?? 'unknown'} /> ·{' '}
+                  {new Date(p.created_at).toLocaleString()}
+                </div>
                 <p className="forum-body">{p.body}</p>
                 {i > 0 && canDelete(p.author_id) && <button onClick={() => deletePost(p.id)}>Delete</button>}
               </article>
             ))}
           </div>
 
-          {session ? (
+          {session && timedOutUntil ? (
+            <p className="forum-note forum-timeout">
+              You are timed out until {timedOutUntil.toLocaleString()} and cannot reply.
+            </p>
+          ) : session ? (
             <div className="forum-form">
               <h2>Reply</h2>
               <textarea

@@ -72,3 +72,42 @@
   overflow-wrap: anywhere;
   margin-top: 8px;
 }
+
+.forum-list li.pinned {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+
+.forum-pin-label {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.forum-timeout {
+  padding: 12px 16px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+}
+
+.author-link {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  color: var(--text-h);
+}
+
+.author-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
