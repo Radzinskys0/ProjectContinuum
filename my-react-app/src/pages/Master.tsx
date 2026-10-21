@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import TodoList from '../components/TodoList'
 import MoreInformation from '../components/MoreInformation'
 import ServantsList from '../components/ServantsList'
 import Rules from '../components/Rules'
@@ -8,7 +7,6 @@ import UsersAdmin from '../components/UsersAdmin'
 import './Master.css'
 
 const SECTIONS = [
-  { id: 'todos', label: "To do's" },
   { id: 'rules', label: 'Servants Rules' },
   { id: 'servants', label: 'Throne of Heroes' },
   { id: 'users', label: 'Masters' },
@@ -20,7 +18,7 @@ type SectionId = (typeof SECTIONS)[number]['id']
 const PLACEHOLDER_SLOTS = 3
 
 export default function Master() {
-  const [section, setSection] = useState<SectionId>('todos')
+  const [section, setSection] = useState<SectionId>(SECTIONS[0].id)
   const navigate = useNavigate()
 
   return (
@@ -45,7 +43,6 @@ export default function Master() {
           ))}
         </nav>
         <div className="master-content">
-          {section === 'todos' && <TodoList />}
           {section === 'rules' && <Rules />}
           {section === 'servants' && <ServantsList />}
           {section === 'users' && <UsersAdmin />}

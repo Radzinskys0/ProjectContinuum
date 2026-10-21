@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../utils/supabase'
 import TimeoutControls, { isTimedOut, type UserRow } from './TimeoutControls'
+import { describeTimeout } from '../utils/timeout'
 import './UsersAdmin.css'
 
 export default function UsersAdmin() {
@@ -44,7 +45,7 @@ export default function UsersAdmin() {
               {u.is_gm && <span className="users-admin-tag">GM</span>}
               {isTimedOut(u) && (
                 <span className="users-admin-tag timed-out">
-                  Timed out until {new Date(u.timeout_until!).toLocaleString()}
+                  Timed out {describeTimeout(u.timeout_until!)}
                 </span>
               )}
             </div>

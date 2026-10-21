@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../utils/supabase'
 import { useAuth } from '../../auth/AuthContext'
 import AuthorName from '../../components/AuthorName'
+import { describeTimeout } from '../../utils/timeout'
 import './Forum.css'
 
 type PostRow = {
@@ -18,6 +19,7 @@ const POST_COLUMNS = 'id, author_id, body, created_at, author:profiles(display_n
 export default function Thread() {
   const { threadId } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { session, role, timedOutUntil } = useAuth()
   const [thread, setThread] = useState<{ title: string; topic_id: number; author_id: string; pinned: boolean } | null>(null)
   const [posts, setPosts] = useState<PostRow[]>([])
@@ -126,7 +128,7 @@ export default function Thread() {
 
           {session && timedOutUntil ? (
             <p className="forum-note forum-timeout">
-              You are timed out until {timedOutUntil.toLocaleString()} and cannot reply.
+              You are timed out {describeTimeout(timedOutUntil)} and cannot reply.
             </p>
           ) : session ? (
             <div className="forum-form">
@@ -145,7 +147,7 @@ export default function Thread() {
             </div>
           ) : (
             <p className="forum-note">
-              <Link to="/">Log in</Link> to reply.
+              <Link to="/login" state={{ from: location.pathname }}>Log in</Link> to reply.
             </p>
           )}
         </>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../utils/supabase'
 import { useAuth } from '../../auth/AuthContext'
 import AuthorName from '../../components/AuthorName'
+import { describeTimeout } from '../../utils/timeout'
 import './Forum.css'
 
 type ThreadRow = {
@@ -17,6 +18,7 @@ type ThreadRow = {
 export default function Topic() {
   const { topicId } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { session, timedOutUntil } = useAuth()
   const [topicTitle, setTopicTitle] = useState('')
   const [threads, setThreads] = useState<ThreadRow[]>([])
@@ -78,7 +80,7 @@ export default function Topic() {
 
           {session && timedOutUntil ? (
             <p className="forum-note forum-timeout">
-              You are timed out until {timedOutUntil.toLocaleString()} and cannot create threads.
+              You are timed out {describeTimeout(timedOutUntil)} and cannot create threads.
             </p>
           ) : session ? (
             <div className="forum-form">
@@ -104,7 +106,7 @@ export default function Topic() {
             </div>
           ) : (
             <p className="forum-note">
-              <Link to="/">Log in</Link> to create threads.
+              <Link to="/login" state={{ from: location.pathname }}>Log in</Link> to create threads.
             </p>
           )}
 

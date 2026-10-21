@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
+import { describeTimeout } from '../utils/timeout'
 import './Profile.css'
 
 const MIN_LENGTH = 3
@@ -8,7 +9,7 @@ const MAX_LENGTH = 24
 
 export default function Profile() {
   const navigate = useNavigate()
-  const { session, loading, role, displayName, updateDisplayName } = useAuth()
+  const { session, loading, role, displayName, timedOutUntil, updateDisplayName } = useAuth()
   const [name, setName] = useState('')
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
@@ -36,6 +37,11 @@ export default function Profile() {
     <div className="profile">
       <button onClick={() => navigate('/')}>Go back</button>
       <h1>Your profile</h1>
+      {timedOutUntil && (
+        <p className="profile-timeout">
+          You are timed out {describeTimeout(timedOutUntil)} and cannot create threads or reply in the forum.
+        </p>
+      )}
       <dl>
         <dt>Email</dt>
         <dd>{session.user.email}</dd>

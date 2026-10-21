@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../utils/supabase'
 import { useAuth } from '../auth/AuthContext'
 import TimeoutControls, { isTimedOut, type UserRow } from './TimeoutControls'
+import { describeTimeout } from '../utils/timeout'
 
 // For GMs the name is clickable and opens timeout controls; everyone else just sees the name.
 export default function AuthorName({ userId, name }: { userId: string; name: string }) {
@@ -34,7 +35,7 @@ export default function AuthorName({ userId, name }: { userId: string; name: str
           {user?.is_gm && <span>GMs cannot be timed out.</span>}
           {user && !user.is_gm && (
             <>
-              {isTimedOut(user) && <span>Timed out until {new Date(user.timeout_until!).toLocaleString()}</span>}
+              {isTimedOut(user) && <span>Timed out {describeTimeout(user.timeout_until!)}</span>}
               <TimeoutControls user={user} onChanged={load} />
             </>
           )}
