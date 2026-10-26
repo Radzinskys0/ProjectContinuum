@@ -1,0 +1,26 @@
+.login {
+  padding: 0 24px 48px;
+}
+
+.login > button:first-child {
+  margin-top: 16px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 320px;
+  margin: 24px auto;
+}
+
+.login-form input {
+  padding: 8px;
+  font: inherit;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}

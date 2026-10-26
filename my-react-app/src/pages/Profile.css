@@ -46,3 +46,9 @@
 .profile-hint {
   font-size: 14px;
 }
+
+.profile-timeout {
+  padding: 12px 16px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+}
