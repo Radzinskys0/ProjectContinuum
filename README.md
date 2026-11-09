@@ -29,11 +29,16 @@ Package manager: npm. Source control: git with GitHub,
 This project has the following public features:
 
 -User auth and roles managed by Supabase
+
 -Public forum with topics, threads and posts where any authenticated user can create and comment posts
+
 -Download links to the Fate/Lost Continuum DnD game manual (WIP)
 
 For admins it also has the following features:
 
 -Admin panel and protected view
+
 -Servant filter and search function, with its corresponding document URL
+
 -User timeout function
+
