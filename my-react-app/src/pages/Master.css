@@ -47,5 +47,33 @@
 
 .master-content {
   flex: 1;
+  min-width: 0;
   padding: 24px;
+}
+
+@media (max-width: 760px) {
+  .master-panel {
+    flex-direction: column;
+  }
+
+  .master-sidebar {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .master-sidebar button {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+
+  .master-sidebar button.placeholder {
+    display: none;
+  }
+
+  .master-content {
+    padding: 16px;
+  }
 }

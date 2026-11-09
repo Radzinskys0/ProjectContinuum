@@ -13,9 +13,74 @@
   min-height: 0;
 }
 
-.servants-list-col input {
+.servants-search-row {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+.servants-search-row input {
+  flex: 1;
+  min-width: 0;
   padding: 8px;
   font: inherit;
+}
+
+.servants-filter-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+
+.servants-filter-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.servants-filter-panel select {
+  padding: 6px;
+  font: inherit;
+}
+
+.servants-filter-panel > button {
+  align-self: flex-end;
+}
+
+.servants-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.servants-chip {
+  padding: 2px 8px;
+  font-size: 13px;
+  border-radius: 12px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  cursor: pointer;
+}
+
+.servants-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 24px;
+  font-size: 13px;
 }
 
 .servants-names {
@@ -55,6 +120,9 @@
 .servants-detail-col {
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow-y: auto;
   gap: 24px;
   min-width: 0;
   border-left: 1px solid var(--border);
@@ -65,14 +133,64 @@
   flex-shrink: 0;
 }
 
-.servants-image {
-  flex: 1;
-  min-width: 0;
+.servants-media {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   align-self: flex-start;
-  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
   max-height: 100%;
+}
+
+/* As wide as the image, so the link below it is centered on the image. */
+.servants-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 0;
+}
+
+.servants-image {
+  min-height: 0;
+  max-width: 100%;
   object-fit: contain;
   border-radius: 6px;
+}
+
+.servants-artist {
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .servants {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .servants-list-col {
+    width: 100%;
+    height: 300px;
+  }
+
+  .servants-detail-col {
+    overflow: visible;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+
+  .servants-media {
+    max-height: none;
+  }
+
+  .servants-image {
+    max-height: 420px;
+  }
 }
 
 .servants-detail-col dt {
